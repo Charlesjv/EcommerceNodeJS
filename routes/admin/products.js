@@ -26,8 +26,10 @@ async(req,res)=>{
 
     const errors = validationResult(req);
 
+  
+
     if(!errors.isEmpty()){
-        res.send(productsNewTemplate({errors}));
+        return res.send(productsNewTemplate({errors}));
     }
 
    const image = req.file.buffer.toString('base64');
