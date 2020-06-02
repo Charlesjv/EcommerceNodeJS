@@ -1,6 +1,7 @@
 const usersRepo = require('../../repositories/users');
 const signupTemplate = require('../../views/admin/auth/signup');
 const signinTemplate = require('../../views/admin/auth/signin');
+const {handleErrors} = require('./middlewares');
 const {
     requireEmail,
     requirePassword,
@@ -49,28 +50,15 @@ router.post('/signup',
  requireEmail,
 requirePassword,
 requirePassConfirmation
-],
+],handleErrors(signupTemplate),
 async(req,res)=>{
 
-    const errors = validationResult(req);
-    console.log(errors);
-
-    if(!errors.isEmpty()){
-        res.send(signupTemplate({req,errors}))
-    }
-
     const {email,password,passwordConfirmation} = req.body;
-
-   
-
     //Create a user in our user repo to represent this person
     const user= await usersRepo.create({email,password});
 
     req.session.userId = user.id;
-
     // Store the id of that user inside the users cookie
-
-
     console.log(req.body); 
 
 res.send("Account Created");
@@ -93,25 +81,13 @@ router.post('/signin',
    requireEmailExists,
    requireValidPasswordForUser
 
-],
+],handleErrors(signinTemplate),
 async(req,res)=>{
 
     const {email} = req.body;
-
-    const errors = validationResult(req);
-    console.log(errors);
-
-    if(!errors.isEmpty()){
-        res.send(signinTemplate({errors}))
-    }
-
     const user = await usersRepo.getOneBy({email});
-
-
     req.session.userId = user.id;
-
     res.send('You are signed in!!! ');
-
 });
 
 module.exports = router;
