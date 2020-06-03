@@ -61,7 +61,7 @@ async(req,res)=>{
     // Store the id of that user inside the users cookie
     console.log(req.body); 
 
-res.send("Account Created");
+res.redirect('/admin/products');
 
 })
 
@@ -87,7 +87,7 @@ async(req,res)=>{
     const {email} = req.body;
     const user = await usersRepo.getOneBy({email});
     req.session.userId = user.id;
-    res.send('You are signed in!!! ');
+    res.redirect('/admin/products');
 });
 
 module.exports = router;
